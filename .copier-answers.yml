@@ -1,0 +1,10 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: v2.0.1-2-g6d79ab7
+_src_path: copier-python/
+author_email: dimitri@dmerej.info
+author_name: Dimitri Merejkowsky
+package_import_name: fastapi_hexa
+project_description: Hexagonal architecture in FastAPI
+project_name: fastapi-hexa
+project_version: 0.0.1
+

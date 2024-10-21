@@ -1,0 +1,52 @@
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+packages = [
+    "fastapi_hexa",
+    "tests",
+]
+strict = true
+
+
+[[tool.mypy.overrides]]
+module = [
+    # Add here packages to ignore
+]
+ignore_missing_imports = true
+
+[tool.poetry]
+name = "fastapi-hexa"
+version = "0.0.1"
+description = "Hexagonal architecture in FastAPI"
+authors = ["Dimitri Merejkowsky <dimitri@dmerej.info>"]
+readme = "README.md"
+license = "BSD-3-Clause"
+# repository = ""
+# documentation = ""
+
+[tool.poetry.urls]
+# Changelog = ""
+# Issues = ""
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = { version = "^0.115.2", extras = ["standard"] }
+
+[tool.poetry.group.dev.dependencies]
+# Tests
+pytest = "^8.3"
+pytest-cov = "^5.0"
+
+# Linters
+black = "^24"
+flake8 = "^7.1"
+flake8-bugbear = "^24.8"
+flake8-comprehensions = "^3.15"
+pep8-naming = "^0.14"
+isort = "^5.13"
+mypy = "^1.12"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
