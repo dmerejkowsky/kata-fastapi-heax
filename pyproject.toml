@@ -2,11 +2,9 @@
 profile = "black"
 
 [tool.mypy]
-packages = [
-    "fastapi_hexa",
-    "tests",
-]
+packages = ["fastapi_hexa", "tests"]
 strict = true
+plugins = ["pydantic.mypy"]
 
 
 [[tool.mypy.overrides]]
