@@ -15,7 +15,11 @@ def get_database_url_from_env() -> str:
 def get_engine() -> Engine:
     echo = bool(os.environ.get("TRAIN_DATABASE_VERBOSE_SQL", False))
     url = get_database_url_from_env()
-    return create_engine(url, echo=echo)
+    return create_engine(
+        url,
+        echo=echo,
+        connect_args={"check_same_thread": False},
+    )
 
 
 engine = get_engine()
@@ -50,6 +54,10 @@ class Database:
             .one_or_none()
         )
         return row
+
+    def get_train_names(self) -> list[str]:
+        rows = self._session.query(TrainModel).all()
+        return sorted(r.name for r in rows)
 
     def close(self) -> None:
         self._session.close()
