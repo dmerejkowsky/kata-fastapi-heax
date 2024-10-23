@@ -94,4 +94,5 @@ def test_book_empty_seat(database: Database, test_app: FastAPI) -> None:
 
     seat = database.get_seat(train_name="express_2000", number="2A")
 
+    assert seat
     assert seat.booking_reference == "def456"

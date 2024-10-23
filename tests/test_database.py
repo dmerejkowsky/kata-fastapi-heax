@@ -34,7 +34,7 @@ def test_enforce_unique_constraint_for_seats(database: Database) -> None:
     database.insert_train("express_2000")
     database.insert_seat(number="1A", train_name="express_2000", booking_reference="")
 
-    with pytest.raises(IntegrityError) as e:
+    with pytest.raises(IntegrityError):
         database.insert_seat(
             number="1A", train_name="express_2000", booking_reference="abc123"
         )
