@@ -16,6 +16,7 @@ def get_database() -> Iterator[Database]:
     session = Session(engine)
     database = Database(session)
     yield database
+    session.commit()
     database.close()
 
 
