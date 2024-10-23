@@ -30,6 +30,7 @@ license = "BSD-3-Clause"
 [tool.poetry.dependencies]
 python = "^3.9"
 fastapi = { version = "^0.115.2", extras = ["standard"] }
+alembic = "^1.13.3"
 
 [tool.poetry.group.dev.dependencies]
 # Tests
