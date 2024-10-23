@@ -39,7 +39,6 @@ def get_trains(database: Database = Depends(get_database)) -> list[TrainSummary]
 class Seat(BaseModel):
     booking_reference: str
     seat_number: str
-    coach: str
 
 
 class Train(BaseModel):
@@ -53,7 +52,6 @@ def get_train(train_name: str, database: Database = Depends(get_database)) -> Tr
         model.number: Seat(
             booking_reference=model.booking_reference,
             seat_number=model.number,
-            coach="yolo",
         )
         for model in seat_models
     }

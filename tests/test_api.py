@@ -60,4 +60,9 @@ def test_get_train_with_one_seat_booked(database: Database, test_app: FastAPI) -
     response = test_client.get("/train/express_2000")
 
     assert response.is_success
-    assert response.json() != []
+    assert response.json() == {
+        "seats": {
+            "1A": {"seat_number": "1A", "booking_reference": ""},
+            "2A": {"seat_number": "2A", "booking_reference": "abc123"},
+        }
+    }
