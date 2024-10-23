@@ -5,14 +5,6 @@ from fastapi.testclient import TestClient
 from fastapi_hexa.database import Database
 from fastapi_hexa.main import app, get_database
 
-test_client = TestClient(app)
-
-
-def test_get_index() -> None:
-    response = test_client.get("/")
-
-    assert response.is_success
-
 
 @pytest.fixture
 def test_app(database: Database) -> FastAPI:
@@ -23,8 +15,19 @@ def test_app(database: Database) -> FastAPI:
     return app
 
 
+@pytest.fixture
+def test_client(test_app: FastAPI) -> TestClient:
+    return TestClient(test_app)
+
+
+def test_get_index(test_client: TestClient) -> None:
+    response = test_client.get("/")
+
+    assert response.is_success
+
+
 def test_get_trains_when_database_is_not_empty(
-    database: Database, test_app: FastAPI
+    database: Database, test_client: TestClient
 ) -> None:
     database.insert_train("express_2000")
 
@@ -35,7 +38,7 @@ def test_get_trains_when_database_is_not_empty(
 
 
 def test_get_trains_when_database_is_empty(
-    database: Database, test_app: FastAPI
+    database: Database, test_client: TestClient
 ) -> None:
     response = test_client.get("/trains")
 
@@ -43,7 +46,9 @@ def test_get_trains_when_database_is_empty(
     assert response.json() == []
 
 
-def test_get_train_with_one_seat_booked(database: Database, test_app: FastAPI) -> None:
+def test_get_train_with_one_seat_booked(
+    database: Database, test_client: TestClient
+) -> None:
     response = test_client.get("/trains")
     database.insert_train("express_2000")
     database.insert_seat(
@@ -68,7 +73,7 @@ def test_get_train_with_one_seat_booked(database: Database, test_app: FastAPI) -
     }
 
 
-def test_book_empty_seat(database: Database, test_app: FastAPI) -> None:
+def test_book_empty_seat(database: Database, test_client: TestClient) -> None:
     database.insert_train("express_2000")
     database.insert_seat(
         number="1A",
@@ -98,7 +103,9 @@ def test_book_empty_seat(database: Database, test_app: FastAPI) -> None:
     assert seat.booking_reference == "def456"
 
 
-def test_cannot_book_same_seat_twice(database: Database, test_app: FastAPI) -> None:
+def test_cannot_book_same_seat_twice(
+    database: Database, test_client: TestClient
+) -> None:
     database.insert_train("express_2000")
     database.insert_seat(
         number="1A",
