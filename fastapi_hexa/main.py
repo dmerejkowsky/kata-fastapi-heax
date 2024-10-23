@@ -27,21 +27,6 @@ def index() -> str:
     return "hello"
 
 
-class Seat(BaseModel):
-    booking_reference: str
-    seat_number: str
-    coach: str
-
-
-class TrainData(BaseModel):
-    seats: dict[str, Seat]
-
-
-@app.get("/data_for_train/{train_id}")
-def get_data_for_train(train_id: int) -> TrainData:
-    return TrainData(seats={})
-
-
 class TrainSummary(BaseModel):
     name: str
 
@@ -49,3 +34,27 @@ class TrainSummary(BaseModel):
 @app.get("/trains")
 def get_trains(database: Database = Depends(get_database)) -> list[TrainSummary]:
     return [TrainSummary(name=name) for name in database.get_train_names()]
+
+
+class Seat(BaseModel):
+    booking_reference: str
+    seat_number: str
+    coach: str
+
+
+class Train(BaseModel):
+    seats: dict[str, Seat]
+
+
+@app.get("/train/{train_name}")
+def get_train(train_name: str, database: Database = Depends(get_database)) -> Train:
+    seat_models = database.get_seats(train_name=train_name)
+    seats = {
+        model.number: Seat(
+            booking_reference=model.booking_reference,
+            seat_number=model.number,
+            coach="yolo",
+        )
+        for model in seat_models
+    }
+    return Train(seats=seats)

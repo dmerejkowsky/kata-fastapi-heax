@@ -41,3 +41,23 @@ def test_get_trains_when_database_is_empty(
 
     assert response.is_success
     assert response.json() == []
+
+
+def test_get_train_with_one_seat_booked(database: Database, test_app: FastAPI) -> None:
+    response = test_client.get("/trains")
+    database.insert_train("express_2000")
+    database.insert_seat(
+        number="1A",
+        train_name="express_2000",
+        booking_reference="",
+    )
+    database.insert_seat(
+        number="2A",
+        train_name="express_2000",
+        booking_reference="abc123",
+    )
+
+    response = test_client.get("/train/express_2000")
+
+    assert response.is_success
+    assert response.json() != []
