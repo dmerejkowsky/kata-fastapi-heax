@@ -1,6 +1,13 @@
-## About this project
+# fastapi-hexa
 
-`GET http://localhost:8081/data_for_train/<train_name>`
+The code given as a starting point uses a simple layered architecture.
+
+The goal is to introduce an hexagonal architecture, so that business rules are easier to write and test.
+
+## API
+
+
+* `GET http://localhost:8081/data_for_train/<train_name>`
 This will return a json document with information about the seats that this train has. The document you get back will look for example like this:
 
 ```json
@@ -22,7 +29,7 @@ This will return a json document with information about the seats that this trai
 
 Here, seat "1A" is booked, but seat "2A" is free.
 
-`POST http://localhost:8081/book`
+* `POST http://localhost:8081/book`
 The body should look like:
 
 ```json
