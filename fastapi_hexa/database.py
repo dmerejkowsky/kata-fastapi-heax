@@ -2,7 +2,13 @@ import os
 from pathlib import Path
 
 from sqlalchemy import Engine, ForeignKey, String, UniqueConstraint, create_engine
-from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column
+from sqlalchemy.orm import (
+    DeclarativeBase,
+    Mapped,
+    Session,
+    mapped_column,
+    scoped_session,
+)
 from ulid import ULID
 
 
@@ -50,13 +56,13 @@ class SeatModel(Base):
 
 
 class Database:
-    def __init__(self, session: Session) -> None:
+    def __init__(self, session: Session | scoped_session[Session]) -> None:
         self._session = session
 
     def insert_train(self, name: str) -> None:
         model = TrainModel(name=name)
         self._session.add(model)
-        self._session.flush()
+        self._session.commit()
 
     def get_train(self, name: str) -> TrainModel | None:
         row = (
@@ -81,7 +87,7 @@ class Database:
             id=str(id),
         )
         self._session.add(seat)
-        self._session.flush()
+        self._session.commit()
 
     def get_seats(self, *, train_name: str) -> list[SeatModel]:
         return (
@@ -111,7 +117,7 @@ class Database:
         if seat.booking_reference and seat.booking_reference != booking_reference:
             raise ValueError("Already booked")
         seat.booking_reference = booking_reference
-        self._session.flush()
+        self._session.commit()
 
     def close(self) -> None:
         self._session.close()
