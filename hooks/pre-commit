@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -x
+set -e
+deactivate || true
+poetry run flake8
+poetry run mypy
