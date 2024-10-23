@@ -9,14 +9,14 @@ from fastapi_hexa.database import Database, get_engine, get_url_from_env
 
 dotenv.load_dotenv()
 
+_engine = get_engine(url=get_url_from_env())
+_session = Session(_engine)
+
 
 def get_database() -> Iterator[Database]:
-    url = get_url_from_env()
-    engine = get_engine(url=url)
-    session = Session(engine)
-    database = Database(session)
+    database = Database(_session)
     yield database
-    session.commit()
+    _session.commit()
     database.close()
 
 
