@@ -56,3 +56,21 @@ def get_train(train_name: str, database: Database = Depends(get_database)) -> Tr
         for model in seat_models
     }
     return Train(seats=seats)
+
+
+class BookingRequest(BaseModel):
+    train: str
+    seat_number: str
+    booking_reference: str
+
+
+@app.post("/train/book")
+def book(
+    booking_request: BookingRequest, database: Database = Depends(get_database)
+) -> str:
+    database.update_seat(
+        train_name=booking_request.train,
+        number=booking_request.seat_number,
+        booking_reference=booking_request.booking_reference,
+    )
+    return "ok"

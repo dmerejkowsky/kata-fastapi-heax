@@ -66,3 +66,32 @@ def test_get_train_with_one_seat_booked(database: Database, test_app: FastAPI) -
             "2A": {"seat_number": "2A", "booking_reference": "abc123"},
         }
     }
+
+
+def test_book_empty_seat(database: Database, test_app: FastAPI) -> None:
+    database.insert_train("express_2000")
+    database.insert_seat(
+        number="1A",
+        train_name="express_2000",
+        booking_reference="abc123",
+    )
+    database.insert_seat(
+        number="2A",
+        train_name="express_2000",
+        booking_reference="",
+    )
+
+    response = test_client.post(
+        "/train/book",
+        json={
+            "train": "express_2000",
+            "seat_number": "2A",
+            "booking_reference": "def456",
+        },
+    )
+
+    assert response.is_success
+
+    seat = database.get_seat(train_name="express_2000", number="2A")
+
+    assert seat.booking_reference == "def456"
