@@ -1,19 +1,22 @@
 from typing import Iterator
 
+import dotenv
 from fastapi import Depends, FastAPI
 from pydantic import BaseModel
-from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.orm import Session
 
-from fastapi_hexa.database import Database, engine
+from fastapi_hexa.database import Database, get_engine, get_url_from_env
+
+dotenv.load_dotenv()
 
 
 def get_database() -> Iterator[Database]:
-    session_factory = sessionmaker(bind=engine)
-    Session = scoped_session(session_factory)
-    session = Session()
+    url = get_url_from_env()
+    engine = get_engine(url=url)
+    session = Session(engine)
     database = Database(session)
     yield database
-    Session.remove()
+    database.close()
 
 
 app = FastAPI()
