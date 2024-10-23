@@ -108,6 +108,8 @@ class Database:
             .filter(SeatModel.number == number)
             .one()
         )
+        if seat.booking_reference and seat.booking_reference != booking_reference:
+            raise ValueError("Already booked")
         seat.booking_reference = booking_reference
         self._session.flush()
 
