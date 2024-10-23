@@ -1,7 +1,7 @@
 from typing import Iterator
 
 import dotenv
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
@@ -68,9 +68,16 @@ class BookingRequest(BaseModel):
 def book(
     booking_request: BookingRequest, database: Database = Depends(get_database)
 ) -> str:
-    database.update_seat(
-        train_name=booking_request.train,
-        number=booking_request.seat_number,
-        booking_reference=booking_request.booking_reference,
-    )
+    try:
+        database.update_seat(
+            train_name=booking_request.train,
+            number=booking_request.seat_number,
+            booking_reference=booking_request.booking_reference,
+        )
+    except ValueError as e:
+        raise HTTPException(
+            status_code=400,
+            detail=str(e),
+        )
+
     return "ok"
