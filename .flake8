@@ -7,5 +7,6 @@ ignore =
   B008,
 
 exclude =
-  build
+  alembic,
+  build,
 # max-complexity = 10
