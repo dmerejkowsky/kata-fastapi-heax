@@ -1,6 +1,6 @@
 ## About this project
 
-`GET http://localhost:8081/data_for_train/<train_id>`
+`GET http://localhost:8081/data_for_train/<train_name>`
 This will return a json document with information about the seats that this train has. The document you get back will look for example like this:
 
 ```json
@@ -22,12 +22,12 @@ This will return a json document with information about the seats that this trai
 
 Here, seat "1A" is booked, but seat "2A" is free.
 
-`POST http://localhost:8081/reserve`
+`POST http://localhost:8081/book`
 The body should look like:
 
 ```json
 {
-  "train_id": "express_2000",
+  "train": "express_2000",
   "seats": ["1A", "2A"],
   "booking_reference": "abc123def"
 }
