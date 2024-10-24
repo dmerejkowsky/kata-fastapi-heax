@@ -5,6 +5,7 @@ from fastapi import Depends, FastAPI, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
+from fastapi_hexa.booking import AlreadyBooked
 from fastapi_hexa.database import Database, get_engine, get_url_from_env
 
 dotenv.load_dotenv()
@@ -64,20 +65,22 @@ class BookingRequest(BaseModel):
     booking_reference: str
 
 
+class BookingResponse(BaseModel):
+    status: ...
+
 @app.post("/train/book")
 def book(
     booking_request: BookingRequest, database: Database = Depends(get_database)
-) -> str:
+) -> BookingResponse:
+    train = database.load_train(booking_request.train)
+
     try:
-        database.update_seat(
-            train_name=booking_request.train,
-            number=booking_request.seat_number,
-            booking_reference=booking_request.booking_reference,
-        )
-    except ValueError as e:
+        train.book(booking_request.seat_number, booking_request.booking_reference)
+    except AlreadyBooked as e:
         raise HTTPException(
             status_code=409,
             detail=str(e),
         )
+    database.save_train(train)
 
-    return "ok"
+    return BookingResponse(...)

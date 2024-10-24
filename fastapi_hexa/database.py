@@ -62,6 +62,8 @@ class Database:
         self._session = session
 
     def insert_train(self, name: str) -> None:
+        if self.get_train(name):
+            return
         model = TrainModel(name=name)
         self._session.add(model)
         self._session.commit()
