@@ -1,8 +1,7 @@
 # fastapi-hexa
 
-The code given as a starting point uses a simple layered architecture.
+The code given as a starting point provides the following API:
 
-The goal is to introduce an hexagonal architecture, so that business rules are easier to write and test.
 
 ## API
 
@@ -39,5 +38,17 @@ Here, seat "1A" is booked, but seat "2A" is free.
 }
 ```
 
-Note that the server will prevent you from booking a seat that is already reserved with another booking reference, by returning a 409 conflict status.
+What has been implemented:
+
+The server will prevent you from booking a seat that is already reserved with another booking reference, by returning a 409 conflict status.
 It is however OK to try and book the same seat with twice with the same booking reference.
+
+## Your task
+
+You have implement a new business rule : it should be forbidden to book seats in different coaches.
+
+Booking ["1A" , "2A"] in coach "A" is OK, but trying to book ["1A", "1B"] with the same booking reference
+should return an error.
+
+To do that, introduce an hexagonal architecture, so that business rules are easier to write and test, and
+only *then* add the new business rule.
