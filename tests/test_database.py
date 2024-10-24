@@ -1,6 +1,7 @@
 import pytest
 from sqlalchemy.exc import IntegrityError
 
+from fastapi_hexa.booking import Train
 from fastapi_hexa.database import Database
 
 
@@ -63,3 +64,15 @@ def test_can_book_a_seat(database: Database) -> None:
 
     assert saved_seat
     assert saved_seat.booking_reference == "abc123"
+
+
+def test_can_save_and_load_a_train(database: Database) -> None:
+    train = Train.empty("express_2000", seat_numbers=["1A", "2A", "3A"])
+
+    train.book("1A", "BOOK1")
+
+    database.save_train(train)
+
+    train = database.load_train(train.name)
+
+    assert train.get_seat("1A").booking_reference == "BOOK1"

@@ -1,0 +1,3 @@
+* [ ] write a create_app() in fastapi_hexa.app and call it in fastapi_hexa.main
+* [ ] /book should take a *list* of seats to book
+* [ ] other rule: you cannot book two seats in different coaches with the same reference

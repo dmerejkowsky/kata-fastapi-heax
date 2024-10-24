@@ -11,6 +11,8 @@ from sqlalchemy.orm import (
 )
 from ulid import ULID
 
+from fastapi_hexa.booking import Seat, Train
+
 
 def get_url_from_env() -> str:
     db_path = Path(os.environ["TRAIN_DATABASE_PATH"])
@@ -118,6 +120,23 @@ class Database:
             raise ValueError("Already booked")
         seat.booking_reference = booking_reference
         self._session.commit()
+
+    def save_train(self, train: Train) -> None:
+        self.insert_train(train.name)
+        for seat in train.seats:
+            self.insert_seat(
+                number=seat.number,
+                train_name=train.name,
+                booking_reference=seat.booking_reference,
+            )
+
+    def load_train(self, name: str) -> Train:
+        seat_models = self.get_seats(train_name=name)
+        seats = [
+            Seat(number=s.number, booking_reference=s.booking_reference)
+            for s in seat_models
+        ]
+        return Train(name, seats=seats)
 
     def close(self) -> None:
         self._session.close()

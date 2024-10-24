@@ -5,6 +5,7 @@ ignore =
   E501,
   E731,
   B008,
+  N818,
 
 exclude =
   alembic,
