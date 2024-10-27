@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 
 from sqlalchemy import Engine, ForeignKey, String, UniqueConstraint, create_engine
+from sqlalchemy.dialects.sqlite import insert
 from sqlalchemy.orm import (
     DeclarativeBase,
     Mapped,
@@ -62,11 +63,9 @@ class Database:
         self._session = session
 
     def insert_train(self, name: str) -> None:
-        if self.get_train(name):
-            return
-        model = TrainModel(name=name)
-        self._session.add(model)
-        self._session.commit()
+        statement = insert(TrainModel).values(name=name)
+        statement = statement.on_conflict_do_nothing(index_elements=["name"])
+        self._session.execute(statement)
 
     def get_train(self, name: str) -> TrainModel | None:
         row = (
@@ -84,14 +83,19 @@ class Database:
         self, *, number: str, train_name: str, booking_reference: str
     ) -> None:
         id = ULID()
-        seat = SeatModel(
+        statement = insert(SeatModel).values(
+            id=str(id),
             number=number,
             train_name=train_name,
             booking_reference=booking_reference,
-            id=str(id),
         )
-        self._session.add(seat)
-        self._session.commit()
+        statement = statement.on_conflict_do_update(
+            index_elements=["number", "train_name"],
+            set_={
+                "booking_reference": booking_reference,
+            },
+        )
+        self._session.execute(statement)
 
     def get_seats(self, *, train_name: str) -> list[SeatModel]:
         return (

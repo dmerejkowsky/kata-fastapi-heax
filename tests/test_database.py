@@ -1,5 +1,3 @@
-import pytest
-from sqlalchemy.exc import IntegrityError
 
 from fastapi_hexa.booking import Train
 from fastapi_hexa.database import Database
@@ -36,15 +34,6 @@ def test_can_add_seats_to_train(database: Database) -> None:
     assert len(saved_seats) == 2
 
 
-def test_enforce_unique_constraint_for_seats(database: Database) -> None:
-    database.insert_train("express_2000")
-    database.insert_seat(number="1A", train_name="express_2000", booking_reference="")
-
-    with pytest.raises(IntegrityError):
-        database.insert_seat(
-            number="1A", train_name="express_2000", booking_reference="abc123"
-        )
-
 
 def test_can_book_a_seat(database: Database) -> None:
     database.insert_train("express_2000")
@@ -59,7 +48,7 @@ def test_can_book_a_seat(database: Database) -> None:
         booking_reference="abc123",
     )
 
-    database.update_seat(
+    database.insert_seat(
         number="1A",
         train_name="express_2000",
         booking_reference="abc123",
