@@ -65,13 +65,10 @@ class BookingRequest(BaseModel):
     booking_reference: str
 
 
-class BookingResponse(BaseModel):
-    status: ...
-
 @app.post("/train/book")
 def book(
     booking_request: BookingRequest, database: Database = Depends(get_database)
-) -> BookingResponse:
+) -> str:
     train = database.load_train(booking_request.train)
 
     try:
@@ -83,4 +80,4 @@ def book(
         )
     database.save_train(train)
 
-    return BookingResponse(...)
+    return "ok"
