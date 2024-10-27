@@ -1,2 +1,2 @@
-* [ ] /book should take a *list* of seats to book
 * [ ] other rule: you cannot book two seats in different coaches with the same reference
+* [ ] create a database transaction when saving a train
