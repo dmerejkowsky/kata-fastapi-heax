@@ -40,7 +40,7 @@ def test_can_create_an_empty_train_has_free_seats() -> None:
 def test_can_book_seats_from_train() -> None:
     train = Train.empty("express_2000", seat_numbers=["1A", "2A", "3A"])
 
-    train.book("1A", "BOOK1")
+    train.book(["1A"], "BOOK1")
 
     seat = train.get_seat("1A")
     assert seat.is_booked

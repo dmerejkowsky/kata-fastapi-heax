@@ -90,7 +90,7 @@ def test_book_empty_seat(database: Database, test_client: TestClient) -> None:
         "/train/book",
         json={
             "train": "express_2000",
-            "seat_number": "2A",
+            "seats": ["2A"],
             "booking_reference": "def456",
         },
     )
@@ -122,9 +122,9 @@ def test_cannot_book_same_seat_twice(
         "/train/book",
         json={
             "train": "express_2000",
-            "seat_number": "1A",
+            "seats": ["1A"],
             "booking_reference": "def456",
         },
     )
 
-    assert response.is_client_error
+    assert response.status_code == 409, response.text

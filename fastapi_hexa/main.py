@@ -61,7 +61,7 @@ def get_train(train_name: str, database: Database = Depends(get_database)) -> Tr
 
 class BookingRequest(BaseModel):
     train: str
-    seat_number: str
+    seats: list[str]
     booking_reference: str
 
 
@@ -72,7 +72,7 @@ def book(
     train = database.load_train(booking_request.train)
 
     try:
-        train.book(booking_request.seat_number, booking_request.booking_reference)
+        train.book(booking_request.seats, booking_request.booking_reference)
     except AlreadyBooked as e:
         raise HTTPException(
             status_code=409,

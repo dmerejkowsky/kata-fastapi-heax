@@ -1,4 +1,3 @@
-
 from fastapi_hexa.booking import Train
 from fastapi_hexa.database import Database
 
@@ -34,7 +33,6 @@ def test_can_add_seats_to_train(database: Database) -> None:
     assert len(saved_seats) == 2
 
 
-
 def test_can_book_a_seat(database: Database) -> None:
     database.insert_train("express_2000")
     database.insert_seat(
@@ -63,7 +61,7 @@ def test_can_book_a_seat(database: Database) -> None:
 def test_can_save_and_load_a_train(database: Database) -> None:
     train = Train.empty("express_2000", seat_numbers=["1A", "2A", "3A"])
 
-    train.book("1A", "BOOK1")
+    train.book(["1A"], "BOOK1")
 
     database.save_train(train)
 

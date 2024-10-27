@@ -60,8 +60,9 @@ class Train:
     def get_seat(self, seat_number: str) -> Seat:
         return self._seats[seat_number]
 
-    def book(self, seat_number: str, booking_reference: str) -> None:
-        seat = self.get_seat(seat_number)
+    def book(self, seats: list[str], booking_reference: str) -> None:
+        for number in seats:
+            seat = self.get_seat(number)
         seat.book(booking_reference)
 
     @property
