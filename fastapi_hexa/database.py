@@ -113,20 +113,6 @@ class Database:
             .one_or_none()
         )
 
-    def update_seat(
-        self, *, train_name: str, number: str, booking_reference: str
-    ) -> None:
-        seat = (
-            self._session.query(SeatModel)
-            .filter(SeatModel.train_name == train_name)
-            .filter(SeatModel.number == number)
-            .one()
-        )
-        if seat.booking_reference and seat.booking_reference != booking_reference:
-            raise ValueError("Already booked")
-        seat.booking_reference = booking_reference
-        self._session.commit()
-
     def save_train(self, train: Train) -> None:
         self.insert_train(train.name)
         for seat in train.seats:
